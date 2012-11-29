@@ -83,7 +83,7 @@ LLenara los catalogos de clientes, prendas, servicios del sistema en uso, asi co
 
 Esto es para continuar trabajando con los mismos datos del sistema anterior.
 
-Si se desea cambiar los precios en los servicios, tendra que ser de forma manual ya que no puede haber concordancia con los datos existentes y un archivo de precios nuevo.
+Si se desea cambiar los precios en los servicios, tendra que ser de forma manual ya que puede no haber concordancia con los datos existentes y un archivo de precios nuevo.
 
 
 Desarrollado
