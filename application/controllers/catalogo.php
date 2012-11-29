@@ -17,6 +17,253 @@ class Catalogo extends CI_Controller {
 		}		
 	}	
 //*************************************************************************************************************************
+	public function importar()
+	{
+	   $data = array();
+       $data['menu'] = 'inicio';
+       $data['submenu'] = 'completo';
+       //$data['sidebar'] = "head/sidebar";
+       //$data['widgets'] = "main/widgets";
+       $data['dondeestoy'] = "main/dondeestoy";
+       
+       $data['titulo'] = "SASTRERIA";
+       $data['contenido'] = "catalogo/importar";
+       
+		$this->load->view('header');
+		$this->load->view('main', $data);
+	}
+
+	function do_upload()
+	{
+		$config['upload_path'] = './uploads/';
+		$config['allowed_types'] = 'mdb';
+		$config['max_size']	= '0';
+
+		$this->load->library('upload', $config);
+
+		if ( ! $this->upload->do_upload())
+		{
+			$error = array('error' => $this->upload->display_errors());
+
+			$this->importar();
+		}
+		else
+		{
+			$data = array('upload_data' => $this->upload->data());
+            $this->subir_datos($data['upload_data']['full_path']);
+            $this->importar();
+		}
+        
+	}
+    
+    
+    private function subir_datos($base)
+    {
+        $dbName = $base;
+            
+        if (!file_exists($dbName)) {
+            die("Could not find database file.");
+        }
+        $db = new PDO("odbc:DRIVER={Microsoft Access Driver (*.mdb)}; DBQ=$dbName; Uid=; Pwd=;");
+        
+        //Prendas
+
+        $sql = "select * from CatPrendas;";
+        $result = $db->query($sql);
+        
+        $a = array();
+        
+        while ($row = $result->fetch()) {
+            array_push($a, array('id' => $row['IdPrenda'], 'prenda' => utf8_encode($row['Descripcion'])));
+        }
+        $this->db->truncate('cs_prendas'); 
+        $this->db->insert_batch('cs_prendas', $a);
+        
+        //Servicios
+        $sql = "select * from CatServicios;";
+        $result = $db->query($sql);
+        
+        $a = array();
+        
+        while ($row = $result->fetch()) {
+            array_push($a, array('id' => $row['IdServicio'], 'nombre' => utf8_encode($row['Descripcion']), 'precio' => $row['Precio'], 'prenda' => $row['IdPrenda']));
+        }
+        $this->db->truncate('cs_servicios'); 
+        $this->db->insert_batch('cs_servicios', $a);
+        
+        //Ordenes
+        $sql = "select * from Ordenes;";
+        $result = $db->query($sql);
+        
+        $a = array();
+        
+        //id, id_cliente, fecha_alta, fecha_entrega, hora_entrega, importe, descu, descuentox, total, abono, pendiente, no_prendas, observacion, id_status, id_user, fecha_captura
+        while ($row = $result->fetch()) {
+            array_push($a,
+            array(
+                'id'            => $row['IdOrden'],
+                'id_cliente'    => $row['IdCliente'],
+                'fecha_alta'    => $row['FechaAlta'],
+                'fecha_entrega' => $row['FechaEntrega'],
+                'hora_entrega'  => $row['HoraEntrega'],
+                'importe'       => $row['Importe'],
+                'descu'         => $row['Descuento'],
+                'descuentox'    => $row['DescPorciento'],
+                'total'         => $row['Total'],
+                'abono'         => $row['Abono'],
+                'pendiente'     => $row['Pendiente'],
+                'no_prendas'    => $row['NoPrendas'],
+                'observacion'   => $row['Observaciones'],
+                'id_status'     => $row['IdStatus'],
+                'id_user'       => $row['IdUsuario'],
+                'fecha_captura' => $row['FechaActualiza']
+            ));
+        }
+        $this->db->truncate('cs_ordenes'); 
+        $this->db->insert_batch('cs_ordenes', $a);
+
+
+        //Ordenes Detalle
+        $sql = "select * from OrdenesDetalle;";
+        $result = $db->query($sql);
+        
+        $a = array();
+        
+        //id, ordenid, prendaid, servicioid, precio, cantidad, idservicio2
+        while ($row = $result->fetch()) {
+            array_push($a,
+            array(
+                'ordenid'       => $row['IdOrden'],
+                'prendaid'      => $row['IdPrenda'],
+                'servicioid'    => $row['IdServicio'],
+                'precio'        => $row['PUnitario'],
+                'cantidad'      => $row['Cantidad']
+            ));
+        }
+        $this->db->truncate('cs_ordendetalle'); 
+        $this->db->insert_batch('cs_ordendetalle', $a);
+        $this->db->query("update cs_ordendetalle o, cs_servicios s set idservicio2 = id2 where o.prendaid = s.prenda and o.servicioid = s.id;");
+
+
+        //Pagos
+        $sql = "select * from Pagos;";
+        $result = $db->query($sql);
+        
+        $a = array();
+        
+        //id, ordenid, pago, referencia, abono, fecha, user_id
+        while ($row = $result->fetch()) {
+            array_push($a,
+            array(
+                'ordenid'       => $row['IdOrden'],
+                'pago'          => $row['IdFormaPago'],
+                'referencia'    => $row['Referencia'],
+                'abono'         => $row['Monto'],
+                'fecha'         => $row['Fecha'],
+                'user_id'       => $row['IdUsuario']
+            ));
+        }
+        $this->db->truncate('cs_pagos'); 
+        $this->db->insert_batch('cs_pagos', $a);
+
+
+        //Clientes
+        $sql = "select * from CatClientes;";
+        $result = $db->query($sql);
+        
+        $a = array();
+        
+        //id, nombre, dire, correo, telcasa, teltra, telcel
+        while ($row = $result->fetch()) {
+            array_push($a,
+            array(
+                'id'        => $row['IdCliente'],
+                'nombre'    => utf8_encode($row['Nombre']),
+                'dire'      => utf8_encode($row['Direccion']),
+                'correo'    => utf8_encode($row['Mail']),
+                'telcasa'   => $row['TelCasa'],
+                'teltra'    => $row['TelOficina'],
+                'telcel'    => $row['TelCelular']
+            ));
+        }
+        $this->db->truncate('cs_clientes'); 
+        $this->db->insert_batch('cs_clientes', $a);
+
+
+        //Formas de Pago
+
+        $sql = "select * from CatFormaPagos;";
+        $result = $db->query($sql);
+        
+        $a = array();
+        
+        while ($row = $result->fetch()) {
+            array_push($a, array('id' => $row['IdFormaPago'], 'nombre' => utf8_encode($row['Descripcion'])));
+        }
+        $this->db->truncate('cs_formas_pago'); 
+        $this->db->insert_batch('cs_formas_pago', $a);
+
+
+        //Status
+
+        $sql = "select * from CatStatus;";
+        $result = $db->query($sql);
+        
+        $a = array();
+        
+        while ($row = $result->fetch()) {
+            array_push($a, array('id' => $row['IdStatus'], 'nombre' => utf8_encode($row['Descripcion'])));
+        }
+        $this->db->truncate('cs_estatus'); 
+        $this->db->insert_batch('cs_estatus', $a);
+
+
+        //Usuarios
+        $sql = "select * from CatUsuarios;";
+        $result = $db->query($sql);
+        
+        $a = array();
+        
+        //id, username, password, nivel, nombre
+        while ($row = $result->fetch()) {
+            array_push($a,
+            array(
+                'id'        => $row['IdUsuario'],
+                'username'  => utf8_encode($row['Usuario']),
+                'password'  => utf8_encode($row['clave']),
+                'nivel'     => $row['Nivel'],
+                'nombre'    => utf8_encode(trim($row['Nombre'])." ".trim($row['APaterno'])." ".trim($row['AMaterno']))
+            ));
+        }
+        $this->db->truncate('cs_usuarios'); 
+        $this->db->insert_batch('cs_usuarios', $a);
+        
+        $this->db->query("update estatus e, cs_estatus c, cs_ordenes o set o.id_status = e.id where e.nombre = c.nombre and o.id_status = c.id;");
+        
+        $this->db->query("insert into clientes
+(id, nombre, dire, correo, telcasa, teltra, telcel)
+(select id, nombre, dire, correo, telcasa, teltra, telcel from cs_clientes);");
+        
+        $this->db->query("insert into orden_c (id, id_cliente, fecha_alta, fecha_entrega, hora_entrega, importe, descu, descuentox, total, abono, pendiente, no_prendas, observacion, id_status, id_user, fecha_captura)
+(SELECT id, id_cliente, fecha_alta, fecha_entrega, hora_entrega, importe, descu, descuentox, total, abono, pendiente, no_prendas, observacion, id_status, id_user, fecha_captura FROM cs_ordenes);");
+
+        $this->db->query("insert into orden_d (id, c_id, s_id, precio, cantidad, id_user)
+(SELECT id, ordenid, idservicio2, precio, cantidad, null FROM cs_ordendetalle);");
+
+        $this->db->query("insert into orden_p (id, c_id, pago, referencia, abono, fecha, user_id)
+(SELECT id, ordenid, pago, referencia, abono, fecha, user_id FROM cs_pagos);");
+
+        $this->db->query("insert into prendas (id, nombre)
+(SELECT * FROM cs_prendas);");
+
+        $this->db->query("insert into servicios (id, nombre, precio, prenda, fecha)
+(SELECT id2, nombre, precio, prenda, now() FROM cs_servicios);");
+
+        $this->db->query("insert into usuarios (id, username, password, nivel, nombre, puesto)
+(SELECT id, username, password, nivel, nombre, case when nivel = 1 then 'SUPERVISOR DE TIENDA' else 'ENCARGADO' end FROM cs_usuarios where id not in(0, 1));");
+        
+    }
+    
 	public function index($campo = 'id', $orden = 'ASC')
 	{
 	   $data = array();

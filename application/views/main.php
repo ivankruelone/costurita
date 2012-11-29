@@ -105,9 +105,8 @@
 <script src="<?php echo base_url();?>js/ui/jquery.ui.position.min.js"></script>
 <script src="<?php echo base_url();?>js/ui/jquery.ui.autocomplete.min.js"></script>
     
-
-	
 	<script language="javascript" type="text/javascript">
+        //F2=113, F4=115, F8=119
         $(document).keydown(function(event) 
         {
         	if (event.keyCode == 113)
@@ -119,6 +118,9 @@
         	}else if (event.keyCode == 119)
         	{
         		window.location = "<?php echo site_url();?>/catalogo";
+        	}else if (event.keyCode == 120 && 1 == <?php echo $this->session->userdata('nivel');?>)
+        	{
+        		window.location = "<?php echo site_url();?>/catalogo/importar";
         	}
         });
         

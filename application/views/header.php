@@ -6,7 +6,7 @@
 	<meta name="author" content="" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	
-	<link rel="shortcut icon" href="<?php echo base_url();?>logo.bmp" />
+	<link rel="shortcut icon" href="<?php echo base_url();?>img/logo.png" />
 	<link rel="apple-touch-icon" href="<?php echo base_url();?>apple-touch-icon.png" />
 	
 	<!-- CSS Styles -->

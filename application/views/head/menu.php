@@ -57,7 +57,7 @@
                 <li>
                 <?php echo anchor('recepcion/configuracion', 'Configuracion', 'class="no-submenu"')?>
 				</li>
-
+                
                 <li>
                 <?php echo anchor('login/logout', 'Cerrar sesi&ocirc;n', 'class="no-submenu"')?>
 				</li>

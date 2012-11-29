@@ -1,112 +1,32 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+-- MySQL Administrator dump 1.4
+--
+-- ------------------------------------------------------
+-- Server version	5.0.51b-community-nt-log
 
 
-class Login extends CI_Controller {
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->load->helper(array('form', 'url'));
-        
-    }
-    
-    function index($error = null)
-    {
-        $data['error'] = $error;
-        $this->load->view('login/login', $data);
-    }
-	
-	function validate_credentials()
-	{		
-		$this->load->model('miembros_model');
-		$query = $this->miembros_model->validate();
-		
-		if($query->num_rows == 1) // if the user's credentials validated...
-		{
-			
-            $row = $query->row();
-            
-            $data = array(
-				'username' => $row->username,
-				'is_logged_in' => true,
-                'nivel' => $row->nivel,
-                'nombre' => $row->nombre,
-                'id' => $row->id,
-                'tipo' => $row->tipo,
-                'puesto' => $row->puesto,
-                'email' => $row->email,
-                'avatar' => $row->avatar
-			);
-			$this->session->set_userdata($data);
-			redirect('welcome');
-		}
-		else // incorrect username or password
-		{
-			redirect('login/index/1');
-		}
-	}
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO,MYSQL323' */;
 
-	public function perfil()
-	{
-	   $data = array();
-       //$data['sidebar'] = "head/sidebar";
-       //$data['widgwet'] = "main/widwets";
-       //$data['sidebar'] = "main/dondeestoy";
-       $this->load->model('miembros_model');
 
-    $data_c['extraheader'] = "
-        <script type=\"text/javascript\" src=\"".base_url()."js/AjaxUpload.2.0.min.js\"></script>
-        ";
-       
-       $data['titulo'] = "Perfil del Usuario";
-       $data['contenido'] = "login/perfil";
-       $data['query'] = $this->miembros_model->datos_usuario($this->session->userdata('id'));
-       
-		$this->load->view('header', $data_c);
-		$this->load->view('main', $data);
-	}
-    
-    public function submit_perfil()
-    {
-        $this->load->model('miembros_model');
-        $this->miembros_model->update_usuario();
-        redirect('welcome', 'refresh');
-    }
-    
-    function upload_avatar()
-    {
-        $uploaddir = './img/avatar/';
-        $file = basename($_FILES['userfile']['name']);
-        $uploadfile = $uploaddir . $file;
-        
-        $config['image_library'] = 'gd2';
-        $config['source_image']	= $uploadfile;
-        $config['create_thumb'] = FALSE;
-        $config['maintain_ratio'] = TRUE;
-        $config['width']	 = 45;
-        $config['height']	= 45;
-        $config['master_dim'] = 'auto';
-        
-        
-        
-        
-        
-        if (move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
-            
-        $this->load->library('image_lib', $config);
-        $this->image_lib->resize();
-        $this->load->model('miembros_model');
-        
-            echo $this->miembros_model->update_avatar($file);
-        } else {
-          echo "error";
-        }
+--
+-- Create schema lacosturita
+--
 
-    }
-    
-    function inicializar()
-    {
-        $sql = "CREATE TABLE `audita_servicios` (
+CREATE DATABASE IF NOT EXISTS lacosturita;
+USE lacosturita;
+
+--
+-- Definition of table `audita_servicios`
+--
+
+DROP TABLE IF EXISTS `audita_servicios`;
+CREATE TABLE `audita_servicios` (
   `id` int(10) unsigned NOT NULL,
   `nombre_anterior` varchar(255) default NULL,
   `nombre_nuevo` varchar(255) default NULL,
@@ -125,6 +45,19 @@ class Login extends CI_Controller {
   KEY `Index_5` (`fecha`)
 ) TYPE=MyISAM;
 
+--
+-- Dumping data for table `audita_servicios`
+--
+
+/*!40000 ALTER TABLE `audita_servicios` DISABLE KEYS */;
+/*!40000 ALTER TABLE `audita_servicios` ENABLE KEYS */;
+
+
+--
+-- Definition of table `ci_sessions`
+--
+
+DROP TABLE IF EXISTS `ci_sessions`;
 CREATE TABLE `ci_sessions` (
   `session_id` varchar(40) NOT NULL default '0',
   `ip_address` varchar(16) NOT NULL default '0',
@@ -134,6 +67,19 @@ CREATE TABLE `ci_sessions` (
   PRIMARY KEY  (`session_id`)
 ) TYPE=InnoDB;
 
+--
+-- Dumping data for table `ci_sessions`
+--
+
+/*!40000 ALTER TABLE `ci_sessions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ci_sessions` ENABLE KEYS */;
+
+
+--
+-- Definition of table `clientes`
+--
+
+DROP TABLE IF EXISTS `clientes`;
 CREATE TABLE `clientes` (
   `id` int(9) unsigned NOT NULL auto_increment,
   `nombre` varchar(70) NOT NULL,
@@ -149,10 +95,23 @@ CREATE TABLE `clientes` (
   `telcasa` varchar(100) default ' ',
   `teltra` varchar(18) default ' ',
   `telcel` varchar(18) default ' ',
-  `tipo` int(2) unsigned default '0',
+  `tipo` int(2) unsigned default '1',
   PRIMARY KEY  (`id`)
 ) TYPE=InnoDB ROW_FORMAT=DYNAMIC;
 
+--
+-- Dumping data for table `clientes`
+--
+
+/*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
+
+
+--
+-- Definition of table `cs_clientes`
+--
+
+DROP TABLE IF EXISTS `cs_clientes`;
 CREATE TABLE `cs_clientes` (
   `id` int(9) unsigned NOT NULL auto_increment,
   `nombre` varchar(70) NOT NULL,
@@ -164,6 +123,19 @@ CREATE TABLE `cs_clientes` (
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM ROW_FORMAT=DYNAMIC;
 
+--
+-- Dumping data for table `cs_clientes`
+--
+
+/*!40000 ALTER TABLE `cs_clientes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cs_clientes` ENABLE KEYS */;
+
+
+--
+-- Definition of table `cs_estatus`
+--
+
+DROP TABLE IF EXISTS `cs_estatus`;
 CREATE TABLE `cs_estatus` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `nombre` varchar(45) NOT NULL,
@@ -171,6 +143,19 @@ CREATE TABLE `cs_estatus` (
   UNIQUE KEY `nombre` (`nombre`)
 ) TYPE=MyISAM;
 
+--
+-- Dumping data for table `cs_estatus`
+--
+
+/*!40000 ALTER TABLE `cs_estatus` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cs_estatus` ENABLE KEYS */;
+
+
+--
+-- Definition of table `cs_formas_pago`
+--
+
+DROP TABLE IF EXISTS `cs_formas_pago`;
 CREATE TABLE `cs_formas_pago` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `nombre` varchar(50) NOT NULL,
@@ -178,6 +163,19 @@ CREATE TABLE `cs_formas_pago` (
   UNIQUE KEY `nombre` (`nombre`)
 ) TYPE=MyISAM;
 
+--
+-- Dumping data for table `cs_formas_pago`
+--
+
+/*!40000 ALTER TABLE `cs_formas_pago` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cs_formas_pago` ENABLE KEYS */;
+
+
+--
+-- Definition of table `cs_ordendetalle`
+--
+
+DROP TABLE IF EXISTS `cs_ordendetalle`;
 CREATE TABLE `cs_ordendetalle` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `ordenid` int(10) unsigned NOT NULL default '0',
@@ -193,6 +191,19 @@ CREATE TABLE `cs_ordendetalle` (
   KEY `Index_4` (`idservicio2`)
 ) TYPE=MyISAM ROW_FORMAT=DYNAMIC;
 
+--
+-- Dumping data for table `cs_ordendetalle`
+--
+
+/*!40000 ALTER TABLE `cs_ordendetalle` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cs_ordendetalle` ENABLE KEYS */;
+
+
+--
+-- Definition of table `cs_ordenes`
+--
+
+DROP TABLE IF EXISTS `cs_ordenes`;
 CREATE TABLE `cs_ordenes` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `id_cliente` int(10) unsigned NOT NULL default '0',
@@ -218,6 +229,19 @@ CREATE TABLE `cs_ordenes` (
   KEY `id_user` (`id_user`)
 ) TYPE=MyISAM ROW_FORMAT=DYNAMIC;
 
+--
+-- Dumping data for table `cs_ordenes`
+--
+
+/*!40000 ALTER TABLE `cs_ordenes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cs_ordenes` ENABLE KEYS */;
+
+
+--
+-- Definition of table `cs_pagos`
+--
+
+DROP TABLE IF EXISTS `cs_pagos`;
 CREATE TABLE `cs_pagos` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `ordenid` int(10) unsigned NOT NULL,
@@ -232,12 +256,38 @@ CREATE TABLE `cs_pagos` (
   KEY `index_3` (`fecha`)
 ) TYPE=MyISAM ROW_FORMAT=DYNAMIC;
 
+--
+-- Dumping data for table `cs_pagos`
+--
+
+/*!40000 ALTER TABLE `cs_pagos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cs_pagos` ENABLE KEYS */;
+
+
+--
+-- Definition of table `cs_prendas`
+--
+
+DROP TABLE IF EXISTS `cs_prendas`;
 CREATE TABLE `cs_prendas` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `prenda` varchar(60) NOT NULL,
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM;
 
+--
+-- Dumping data for table `cs_prendas`
+--
+
+/*!40000 ALTER TABLE `cs_prendas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cs_prendas` ENABLE KEYS */;
+
+
+--
+-- Definition of table `cs_servicios`
+--
+
+DROP TABLE IF EXISTS `cs_servicios`;
 CREATE TABLE `cs_servicios` (
   `id` int(10) unsigned NOT NULL,
   `nombre` varchar(100) NOT NULL,
@@ -249,6 +299,19 @@ CREATE TABLE `cs_servicios` (
   KEY `index_3` (`id2`)
 ) TYPE=MyISAM;
 
+--
+-- Dumping data for table `cs_servicios`
+--
+
+/*!40000 ALTER TABLE `cs_servicios` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cs_servicios` ENABLE KEYS */;
+
+
+--
+-- Definition of table `cs_usuarios`
+--
+
+DROP TABLE IF EXISTS `cs_usuarios`;
 CREATE TABLE `cs_usuarios` (
   `id` int(10) unsigned NOT NULL,
   `username` varchar(20) NOT NULL,
@@ -259,20 +322,45 @@ CREATE TABLE `cs_usuarios` (
   UNIQUE KEY `index_2` (`username`)
 ) TYPE=MyISAM ROW_FORMAT=DYNAMIC;
 
+--
+-- Dumping data for table `cs_usuarios`
+--
+
+/*!40000 ALTER TABLE `cs_usuarios` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cs_usuarios` ENABLE KEYS */;
+
+
+--
+-- Definition of table `estatus`
+--
+
+DROP TABLE IF EXISTS `estatus`;
 CREATE TABLE `estatus` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `nombre` varchar(45) NOT NULL,
-  `tipo` int(10) unsigned NOT NULL,
+  `tipo` int(10) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) TYPE=InnoDB AUTO_INCREMENT=5;
+) TYPE=InnoDB AUTO_INCREMENT=5 ROW_FORMAT=DYNAMIC;
 
-INSERT INTO `estatus` (`id`,`nombre`,`tipo`) VALUES
+--
+-- Dumping data for table `estatus`
+--
+
+/*!40000 ALTER TABLE `estatus` DISABLE KEYS */;
+INSERT INTO `estatus` (`id`,`nombre`,`tipo`) VALUES 
  (1,'PENDIENTE',1),
  (2,'CANCELADO',1),
- (3,'PROCESO',1),
+ (3,'EN PROCESO',1),
  (4,'ENTREGADO',1);
+/*!40000 ALTER TABLE `estatus` ENABLE KEYS */;
 
+
+--
+-- Definition of table `horario`
+--
+
+DROP TABLE IF EXISTS `horario`;
 CREATE TABLE `horario` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `horario` time NOT NULL,
@@ -280,7 +368,12 @@ CREATE TABLE `horario` (
   PRIMARY KEY  (`id`)
 ) TYPE=InnoDB AUTO_INCREMENT=28;
 
-INSERT INTO `horario` (`id`,`horario`,`tipo`) VALUES
+--
+-- Dumping data for table `horario`
+--
+
+/*!40000 ALTER TABLE `horario` DISABLE KEYS */;
+INSERT INTO `horario` (`id`,`horario`,`tipo`) VALUES 
  (1,'08:00:00',0),
  (2,'08:30:00',0),
  (3,'09:00:00',0),
@@ -308,7 +401,14 @@ INSERT INTO `horario` (`id`,`horario`,`tipo`) VALUES
  (25,'20:00:00',0),
  (26,'20:30:00',0),
  (27,'21:00:00',0);
+/*!40000 ALTER TABLE `horario` ENABLE KEYS */;
 
+
+--
+-- Definition of table `orden_c`
+--
+
+DROP TABLE IF EXISTS `orden_c`;
 CREATE TABLE `orden_c` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `id_cliente` int(10) unsigned NOT NULL default '0',
@@ -338,19 +438,45 @@ CREATE TABLE `orden_c` (
   KEY `Index_7` (`id_user_cancelacion`)
 ) TYPE=InnoDB ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 1136640 kB';
 
+--
+-- Dumping data for table `orden_c`
+--
+
+/*!40000 ALTER TABLE `orden_c` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orden_c` ENABLE KEYS */;
+
+
+--
+-- Definition of table `orden_d`
+--
+
+DROP TABLE IF EXISTS `orden_d`;
 CREATE TABLE `orden_d` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `c_id` int(10) unsigned NOT NULL default '0',
   `s_id` int(10) unsigned NOT NULL default '0',
   `precio` decimal(11,2) NOT NULL default '0.00',
   `cantidad` int(10) unsigned NOT NULL default '0',
-  `id_user` int(10) unsigned NOT NULL default '0',
+  `id_user` int(10) unsigned default '0',
   PRIMARY KEY  (`id`),
   KEY `orden_c` (`c_id`),
   KEY `servicio` (`s_id`),
   KEY `Index_4` (`id_user`)
 ) TYPE=InnoDB ROW_FORMAT=DYNAMIC;
 
+--
+-- Dumping data for table `orden_d`
+--
+
+/*!40000 ALTER TABLE `orden_d` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orden_d` ENABLE KEYS */;
+
+
+--
+-- Definition of table `orden_p`
+--
+
+DROP TABLE IF EXISTS `orden_p`;
 CREATE TABLE `orden_p` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `c_id` int(10) unsigned NOT NULL,
@@ -365,22 +491,47 @@ CREATE TABLE `orden_p` (
   KEY `index_3` (`fecha`)
 ) TYPE=InnoDB ROW_FORMAT=DYNAMIC;
 
+--
+-- Dumping data for table `orden_p`
+--
+
+/*!40000 ALTER TABLE `orden_p` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orden_p` ENABLE KEYS */;
+
+
+--
+-- Definition of table `pagos`
+--
+
+DROP TABLE IF EXISTS `pagos`;
 CREATE TABLE `pagos` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `nombre` varchar(50) NOT NULL,
-  `tipo` int(2) unsigned NOT NULL,
+  `tipo` int(2) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) TYPE=InnoDB AUTO_INCREMENT=6;
+) TYPE=InnoDB AUTO_INCREMENT=6 ROW_FORMAT=DYNAMIC;
 
-INSERT INTO `pagos` (`id`,`nombre`,`tipo`) VALUES
+--
+-- Dumping data for table `pagos`
+--
+
+/*!40000 ALTER TABLE `pagos` DISABLE KEYS */;
+INSERT INTO `pagos` (`id`,`nombre`,`tipo`) VALUES 
  (1,'EFECTIVO',1),
  (2,'CHEQUE',1),
  (3,'TARJETA',1),
  (4,'CLIENTE FRECUENTE',1),
  (5,'VALES',1);
+/*!40000 ALTER TABLE `pagos` ENABLE KEYS */;
 
- CREATE TABLE `parametros` (
+
+--
+-- Definition of table `parametros`
+--
+
+DROP TABLE IF EXISTS `parametros`;
+CREATE TABLE `parametros` (
   `dias` int(2) unsigned NOT NULL,
   `id` int(10) unsigned NOT NULL auto_increment,
   `sucursal` varchar(255) NOT NULL,
@@ -392,50 +543,100 @@ INSERT INTO `pagos` (`id`,`nombre`,`tipo`) VALUES
   PRIMARY KEY  (`id`)
 ) TYPE=MyISAM AUTO_INCREMENT=2;
 
-INSERT INTO `parametros` (`dias`,`id`,`sucursal`,`razon`,`rfc`,`regimen`,`direccion`,`clausulado`) VALUES
- (2,1,'Sucursal:','Razon Social','RFC','Regimen de PequeÒo Contribuyente -----------------------------------------------','----------------------------------------------------','<p>Contrato de servicio que celebra entre el prestador del servicio y el consumidor cuyos nombres y datos constan en el presente documento, sujet·ndose a las siguientes clausulas:</p>\n1.	El n˙mero de prendas dejadas en el establecimiento est·n especificadas en el presente documento.</p>\n2.	Si al momento de recoger sus prendas el cliente no presenta su comprobante, deber· de presentar una copia de se identificaciÛn oficial.</p>\n3.	El cliente tiene una garantÌa de tres dÌas h·biles para realizar cualquier reclamaciÛn sobre el trabajo realizado, con la presentaciÛn del comprobante de la prenda.</P>\n4.	En caso de no poder presentarse dentro de los tres dÌas h·biles para hacer valida su garantÌa, deber· de notificar vÌa telefÛnica a la persona encargada, quien le proporcionara una clave para que el cliente pase en un lapso no mayor a 10 dÌas h·biles.</p>\n5.	El establecimiento no se hace responsable de ning˙n objeto o valor olvidado en las prendas recibidas.</p>\n6.	El establecimiento no se hace responsable, por aquellas prendas que permanezcan m·s de noventa dÌas y que no hayan sido buscadas por sus dueÒos, otorg·ndose de esta forma al establecimiento de manera inmediata, acreedor de las prendas olvidadas.</p>\n7.	El cliente pagara al establecimiento por concepto de almacenaje despuÈs de cuarenta y cinco dÌas el 3% diario sobre el valor del comprobante, considerando que el importe a pagar no sea mayor o igual al importe del comprobante emitido.</p>\n8.	En caso de deterioro total o parcial de la prenda asÌ como perdida de la misma, el establecimiento pagara al propietario de la misma hasta un m·ximo de 8 veces el costo del servicio pactado por dicha prenda, o un m·ximo del 80% del valor de la prenda que las partes de com˙n acuerdo hayan declarado o en su defecto, el cliente puede demostrar con la nota de compra.</p>\n9.	Para dirimir cualquier controversia las partes se someten a la ley de protecciÛn al consumidor.</p>\nEl consumidor dar· por aceptadas las normas, en el momento en que se reciba el comprobante de acuse de recibo.</p>');
+--
+-- Dumping data for table `parametros`
+--
 
- CREATE TABLE `prendas` (
+/*!40000 ALTER TABLE `parametros` DISABLE KEYS */;
+INSERT INTO `parametros` (`dias`,`id`,`sucursal`,`razon`,`rfc`,`regimen`,`direccion`,`clausulado`) VALUES 
+ (2,1,'Sucursal:','Razon Social','RFC','Regimen de Peque√±o Contribuyente -----------------------------------------------','----------------------------------------------------','<p>Contrato de servicio que celebra entre el prestador del servicio y el consumidor cuyos nombres y datos constan en el presente documento, sujet√°ndose a las siguientes clausulas:</p>\n1.	El n√∫mero de prendas dejadas en el establecimiento est√°n especificadas en el presente documento.</p>\n2.	Si al momento de recoger sus prendas el cliente no presenta su comprobante, deber√° de presentar una copia de se identificaci√≥n oficial.</p>\n3.	El cliente tiene una garant√≠a de tres d√≠as h√°biles para realizar cualquier reclamaci√≥n sobre el trabajo realizado, con la presentaci√≥n del comprobante de la prenda.</P>\n4.	En caso de no poder presentarse dentro de los tres d√≠as h√°biles para hacer valida su garant√≠a, deber√° de notificar v√≠a telef√≥nica a la persona encargada, quien le proporcionara una clave para que el cliente pase en un lapso no mayor a 10 d√≠as h√°biles.</p>\n5.	El establecimiento no se hace responsable de ning√∫n objeto o valor olvidado en las prendas recibidas.</p>\n6.	El establecimiento no se hace responsable, por aquellas prendas que permanezcan m√°s de noventa d√≠as y que no hayan sido buscadas por sus due√±os, otorg√°ndose de esta forma al establecimiento de manera inmediata, acreedor de las prendas olvidadas.</p>\n7.	El cliente pagara al establecimiento por concepto de almacenaje despu√©s de cuarenta y cinco d√≠as el 3% diario sobre el valor del comprobante, considerando que el importe a pagar no sea mayor o igual al importe del comprobante emitido.</p>\n8.	En caso de deterioro total o parcial de la prenda as√≠ como perdida de la misma, el establecimiento pagara al propietario de la misma hasta un m√°ximo de 8 veces el costo del servicio pactado por dicha prenda, o un m√°ximo del 80% del valor de la prenda que las partes de com√∫n acuerdo hayan declarado o en su defecto, el cliente puede demostrar con la nota de compra.</p>\n9.	Para dirimir cualquier controversia las partes se someten a la ley de protecci√≥n al consumidor.</p>\nEl consumidor dar√° por aceptadas las normas, en el momento en que se reciba el comprobante de acuse de recibo.</p>');
+/*!40000 ALTER TABLE `parametros` ENABLE KEYS */;
+
+
+--
+-- Definition of table `prendas`
+--
+
+DROP TABLE IF EXISTS `prendas`;
+CREATE TABLE `prendas` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `nombre` varchar(50) NOT NULL,
-  `tipo` int(2) unsigned NOT NULL,
+  `tipo` int(2) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `nombre` (`nombre`)
 ) TYPE=InnoDB ROW_FORMAT=DYNAMIC;
 
+--
+-- Dumping data for table `prendas`
+--
+
+/*!40000 ALTER TABLE `prendas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `prendas` ENABLE KEYS */;
+
+
+--
+-- Definition of table `servicios`
+--
+
+DROP TABLE IF EXISTS `servicios`;
 CREATE TABLE `servicios` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `nombre` varchar(100) NOT NULL,
   `precio` decimal(11,2) NOT NULL,
   `prenda` int(9) unsigned NOT NULL,
   `fecha` datetime NOT NULL,
-  `tipo` int(2) unsigned NOT NULL,
+  `tipo` int(2) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   KEY `prendas` (`prenda`)
-) TYPE=InnoDB;
+) TYPE=InnoDB ROW_FORMAT=DYNAMIC;
+
+--
+-- Dumping data for table `servicios`
+--
+
+/*!40000 ALTER TABLE `servicios` DISABLE KEYS */;
+/*!40000 ALTER TABLE `servicios` ENABLE KEYS */;
+
+
+--
+-- Definition of trigger `servicios_inserta`
+--
+
+DROP TRIGGER /*!50030 IF EXISTS */ `servicios_inserta`;
 
 DELIMITER $$
 
-CREATE TRIGGER `servicios_inserta` AFTER INSERT ON `servicios` FOR EACH ROW BEGIN
+CREATE DEFINER = `root`@`%` TRIGGER `servicios_inserta` AFTER INSERT ON `servicios` FOR EACH ROW BEGIN
 insert into audita_servicios (id, nombre_anterior, nombre_nuevo, precio_anterior, precio_nuevo, prenda_anterior, prenda_nueva, fecha, activo_antes, activo_despues) values (NEW.id, null, NEW.nombre, null, NEW.precio, null, NEW.prenda, now(), null, NEW.tipo);
 END $$
 
 DELIMITER ;
 
+--
+-- Definition of trigger `servicios_actualiza`
+--
+
+DROP TRIGGER /*!50030 IF EXISTS */ `servicios_actualiza`;
+
 DELIMITER $$
 
-CREATE TRIGGER `servicios_actualiza` AFTER UPDATE ON `servicios` FOR EACH ROW BEGIN
+CREATE DEFINER = `root`@`%` TRIGGER `servicios_actualiza` AFTER UPDATE ON `servicios` FOR EACH ROW BEGIN
 insert into audita_servicios (id, nombre_anterior, nombre_nuevo, precio_anterior, precio_nuevo, prenda_anterior, prenda_nueva, fecha, activo_antes, activo_despues) values (NEW.id, OLD.nombre, NEW.nombre, OLD.precio, NEW.precio, OLD.prenda, NEW.prenda, now(), OLD.tipo, NEW.tipo);
 END $$
 
 DELIMITER ;
 
+--
+-- Definition of table `usuarios`
+--
+
+DROP TABLE IF EXISTS `usuarios`;
 CREATE TABLE `usuarios` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `username` varchar(20) NOT NULL,
   `password` varchar(20) NOT NULL,
   `nivel` tinyint(3) unsigned NOT NULL,
-  `tipo` tinyint(3) unsigned NOT NULL,
+  `tipo` tinyint(3) unsigned NOT NULL default '1',
   `nombre` varchar(60) NOT NULL,
   `puesto` varchar(45) NOT NULL,
   `email` varchar(45) default NULL,
@@ -443,16 +644,23 @@ CREATE TABLE `usuarios` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `index_2` (`username`)
 ) TYPE=InnoDB AUTO_INCREMENT=2 ROW_FORMAT=DYNAMIC;
-INSERT INTO `usuarios` (`id`,`username`,`password`,`nivel`,`tipo`,`nombre`,`puesto`,`email`,`avatar`) VALUES
- (1,'admin','admin',1,1,'SUPERVISOR DE TIENDA','SUPERVISOR',NULL,'sample_user.png');";
-    }
 
-	
-	
-	function logout()
-	{
-		$this->session->sess_destroy();
-		redirect('login', 'refresh');
-	}
+--
+-- Dumping data for table `usuarios`
+--
 
-}
+/*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
+INSERT INTO `usuarios` (`id`,`username`,`password`,`nivel`,`tipo`,`nombre`,`puesto`,`email`,`avatar`) VALUES 
+ (1,'admin','admin',1,1,'SUPERVISOR DE TIENDA','SUPERVISOR',NULL,'sample_user.png');
+/*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
+
+
+
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
