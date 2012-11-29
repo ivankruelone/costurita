@@ -18,8 +18,8 @@
 -- Create schema lacosturita
 --
 
-CREATE DATABASE IF NOT EXISTS lacosturita;
-USE lacosturita;
+CREATE DATABASE IF NOT EXISTS sastreria;
+USE sastreria;
 
 --
 -- Definition of table `audita_servicios`
@@ -606,7 +606,7 @@ DROP TRIGGER /*!50030 IF EXISTS */ `servicios_inserta`;
 
 DELIMITER $$
 
-CREATE DEFINER = `root`@`%` TRIGGER `servicios_inserta` AFTER INSERT ON `servicios` FOR EACH ROW BEGIN
+CREATE TRIGGER `servicios_inserta` AFTER INSERT ON `servicios` FOR EACH ROW BEGIN
 insert into audita_servicios (id, nombre_anterior, nombre_nuevo, precio_anterior, precio_nuevo, prenda_anterior, prenda_nueva, fecha, activo_antes, activo_despues) values (NEW.id, null, NEW.nombre, null, NEW.precio, null, NEW.prenda, now(), null, NEW.tipo);
 END $$
 
@@ -620,7 +620,7 @@ DROP TRIGGER /*!50030 IF EXISTS */ `servicios_actualiza`;
 
 DELIMITER $$
 
-CREATE DEFINER = `root`@`%` TRIGGER `servicios_actualiza` AFTER UPDATE ON `servicios` FOR EACH ROW BEGIN
+CREATE TRIGGER `servicios_actualiza` AFTER UPDATE ON `servicios` FOR EACH ROW BEGIN
 insert into audita_servicios (id, nombre_anterior, nombre_nuevo, precio_anterior, precio_nuevo, prenda_anterior, prenda_nueva, fecha, activo_antes, activo_despues) values (NEW.id, OLD.nombre, NEW.nombre, OLD.precio, NEW.precio, OLD.prenda, NEW.prenda, now(), OLD.tipo, NEW.tipo);
 END $$
 
