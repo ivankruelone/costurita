@@ -69,6 +69,23 @@ El usuario inicial sera:
     usuario: admin
     password: admin
 
+Importar datos.
+
+Para importar datos desde una base de datos como:
+
+    CostuShop.mdb
+    
+Presionar F9 una vez que se entro con el usuario de administrador, seleccionar en archivo a subir y dar click en upload.
+
+Se recomienda hacer esto solo una vez y con las tablas limpias.
+
+LLenara los catalogos de clientes, prendas, servicios del sistema en uso, asi como las ordenes y los pagos, continuando con el consecutivo siguiente.
+
+Esto es para continuar trabajando con los mismos datos del sistema anterior.
+
+Si se desea cambiar los precios en los servicios, tendra que ser de forma manual ya que no puede haber concordancia con los datos existentes y un archivo de precios nuevo.
+
+
 Desarrollado
 ------------
 
