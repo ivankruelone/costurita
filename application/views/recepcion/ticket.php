@@ -24,21 +24,21 @@
 
 ?>
 <div align="center"><a id="imprime" href="#" class="button red">Imprimir</a></div>
-<div style="width: 100%;" id="ticket">
+<div style="width: 100%; font-size: x-small;" id="ticket">
     <div align="center">
-    <img src="<?php echo base_url();?>img/<?php echo LOGO_TICKET; ?>" border="0" width="250" align="middle" />
+    <img src="<?php echo base_url();?>img/<?php echo LOGO_TICKET; ?>" border="0" width="230" align="middle" />
     </div>
-    <div align="center">
+    <div align="center" style="font-size: x-small;">
                 <?php echo $dat->sucursal; ?>
                 <br /><?php echo $dat->razon; ?>
                 <br />R. F. C. <?php echo $dat->rfc; ?>
                 <br /><?php echo $dat->regimen; ?>
     </div>
-    <div align="center">
+    <div align="center" style="font-size: x-small;">
                 No. Orden: <strong><?php echo $row->id; ?></strong>
     </div>
     <div>
-    <table width="100%">
+    <table width="100%" style="font-size: x-small;">
     <tr>
         <td colspan="4">
             Nombre: <?php echo $row->nombre; ?>
@@ -74,8 +74,8 @@
     </tr>
 </table>
     </div>
-    <div>
-    <table width="100%">
+    <div style="font-size: x-small;">
+    <table width="100%" style="font-size: x-small;">
     <thead>
         <tr>
             <th>CAN.</th>
@@ -96,8 +96,8 @@
     </tbody>
 </table>
     </div>
-    <div>
-    <table width="100%">
+    <div style="font-size: x-small;">
+    <table width="100%" style="font-size: x-small;">
         <tr>
             <td align="right">TOTAL</td>
             <td align="right"><?php echo number_format($row->total, 2); ?></td>
@@ -112,8 +112,8 @@
         </tr>
     </table>
     </div>
-    <div>
-    <table width="100%">
+    <div style="font-size: x-small;">
+    <table width="100%" style="font-size: x-small;">
     <tr>
         <td>Fecha de entrega: </td>
         <td><?php echo $dia[$row->dia]."<br />".$row->fecha_entrega; ?></td>
@@ -139,15 +139,12 @@
     </tr>
 </table>
     </div>
-    <div align="justify">
+    <div align="justify" style="font-size: xx-small;">
     <?php  
     echo ($dat->clausulado);
     ?>
     </div>
-	<div style="height: 325px; width: 100%;">.
-	</div>
-	<div style="height: 325px; width: 100%;">.
-	</div>
+	<div style="height: 325px; width: 100%;">.</div>
     <div>.</div>
 </div>
 
