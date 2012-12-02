@@ -57,7 +57,67 @@ class Catalogo extends CI_Controller {
 	}
     
     
-    private function subir_datos($base)
+	function do_upload_csv()
+	{
+		$config['upload_path'] = './uploads/';
+		$config['allowed_types'] = 'csv';
+		$config['max_size']	= '0';
+
+		$this->load->library('upload', $config);
+
+		if ( ! $this->upload->do_upload())
+		{
+			$error = array('error' => $this->upload->display_errors());
+			$this->importar();
+		}
+		else
+		{
+			$data = array('upload_data' => $this->upload->data());
+            $this->subir_csv($data['upload_data']['file_name']);
+            $this->importar();
+		}
+        
+	}
+    
+    private function subir_csv($file)
+    {
+        $filePath = './uploads/' . $file;
+                    
+                    $row = 1;
+                    if (($handle = fopen($filePath, "r")) !== FALSE) {
+                        
+                        $a = array();
+                        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                            $num = count($data);
+                            //echo "<p> $num fields in line $row: <br /></p>\n";
+                            $row++;
+                            for ($c=0; $c < $num; $c++) {
+                                //echo $data[$c] . "<br />\n";
+                            }
+                            
+                            $b = array(
+                            'idprenda' => $data[0],
+                            'prenda' => $data[1],
+                            'servicio' =>   $data[3],
+                            'precio' => $data[4]
+                            );
+                            
+                            array_push($a, $b);
+                            
+                        }
+                        fclose($handle);
+                        $this->db->truncate('cs_precios'); 
+                        $this->db->truncate('prendas'); 
+                        $this->db->truncate('servicios'); 
+                        $this->db->insert_batch('cs_precios', $a);
+                        
+                        $this->db->query("insert into prendas(SELECT idprenda, prenda, 1 FROM cs_precios group by idprenda);");
+                        $this->db->query("insert into servicios (SELECT id, servicio, precio, idprenda, now(), 1 FROM cs_precios c);");
+                    }
+
+    }
+
+private function subir_datos($base)
     {
         $dbName = $base;
             
