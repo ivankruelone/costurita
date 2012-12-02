@@ -43,7 +43,7 @@ CREATE TABLE `audita_servicios` (
   KEY `prenda_anteriork` (`prenda_anterior`),
   KEY `index_4` (`id`),
   KEY `Index_5` (`fecha`)
-) TYPE=MyISAM;
+);
 
 --
 -- Dumping data for table `audita_servicios`
@@ -65,7 +65,7 @@ CREATE TABLE `ci_sessions` (
   `last_activity` int(10) unsigned NOT NULL default '0',
   `user_data` text,
   PRIMARY KEY  (`session_id`)
-) TYPE=InnoDB;
+);
 
 --
 -- Dumping data for table `ci_sessions`
@@ -97,7 +97,7 @@ CREATE TABLE `clientes` (
   `telcel` varchar(18) default ' ',
   `tipo` int(2) unsigned default '1',
   PRIMARY KEY  (`id`)
-) TYPE=InnoDB ROW_FORMAT=DYNAMIC;
+) ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `clientes`
@@ -121,7 +121,7 @@ CREATE TABLE `cs_clientes` (
   `teltra` varchar(18) default ' ',
   `telcel` varchar(18) default ' ',
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM ROW_FORMAT=DYNAMIC;
+) ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `cs_clientes`
@@ -141,7 +141,7 @@ CREATE TABLE `cs_estatus` (
   `nombre` varchar(45) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) TYPE=MyISAM;
+);
 
 --
 -- Dumping data for table `cs_estatus`
@@ -161,7 +161,7 @@ CREATE TABLE `cs_formas_pago` (
   `nombre` varchar(50) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) TYPE=MyISAM;
+);
 
 --
 -- Dumping data for table `cs_formas_pago`
@@ -189,7 +189,7 @@ CREATE TABLE `cs_ordendetalle` (
   KEY `prena` (`prendaid`),
   KEY `servicio` (`servicioid`),
   KEY `Index_4` (`idservicio2`)
-) TYPE=MyISAM ROW_FORMAT=DYNAMIC;
+) ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `cs_ordendetalle`
@@ -227,7 +227,7 @@ CREATE TABLE `cs_ordenes` (
   KEY `fecha_entrega` (`fecha_entrega`),
   KEY `id_status` (`id_status`),
   KEY `id_user` (`id_user`)
-) TYPE=MyISAM ROW_FORMAT=DYNAMIC;
+) ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `cs_ordenes`
@@ -254,7 +254,7 @@ CREATE TABLE `cs_pagos` (
   KEY `index_2` (`ordenid`),
   KEY `index_4` (`user_id`),
   KEY `index_3` (`fecha`)
-) TYPE=MyISAM ROW_FORMAT=DYNAMIC;
+) ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `cs_pagos`
@@ -273,7 +273,7 @@ CREATE TABLE `cs_prendas` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `prenda` varchar(60) NOT NULL,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM;
+);
 
 --
 -- Dumping data for table `cs_prendas`
@@ -297,7 +297,7 @@ CREATE TABLE `cs_servicios` (
   PRIMARY KEY  (`id`,`prenda`),
   KEY `prendas` (`prenda`),
   KEY `index_3` (`id2`)
-) TYPE=MyISAM;
+);
 
 --
 -- Dumping data for table `cs_servicios`
@@ -320,7 +320,7 @@ CREATE TABLE `cs_usuarios` (
   `nombre` varchar(60) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `index_2` (`username`)
-) TYPE=MyISAM ROW_FORMAT=DYNAMIC;
+) ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `cs_usuarios`
@@ -341,7 +341,7 @@ CREATE TABLE `estatus` (
   `tipo` int(10) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) TYPE=InnoDB AUTO_INCREMENT=5 ROW_FORMAT=DYNAMIC;
+) AUTO_INCREMENT=5 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `estatus`
@@ -366,7 +366,7 @@ CREATE TABLE `horario` (
   `horario` time NOT NULL,
   `tipo` int(2) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) TYPE=InnoDB AUTO_INCREMENT=28;
+) AUTO_INCREMENT=28;
 
 --
 -- Dumping data for table `horario`
@@ -436,7 +436,7 @@ CREATE TABLE `orden_c` (
   KEY `id_status` (`id_status`),
   KEY `id_user` (`id_user`),
   KEY `Index_7` (`id_user_cancelacion`)
-) TYPE=InnoDB ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 1136640 kB';
+) ROW_FORMAT=DYNAMIC COMMENT='InnoDB free: 1136640 kB';
 
 --
 -- Dumping data for table `orden_c`
@@ -462,7 +462,7 @@ CREATE TABLE `orden_d` (
   KEY `orden_c` (`c_id`),
   KEY `servicio` (`s_id`),
   KEY `Index_4` (`id_user`)
-) TYPE=InnoDB ROW_FORMAT=DYNAMIC;
+) ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `orden_d`
@@ -489,7 +489,7 @@ CREATE TABLE `orden_p` (
   KEY `index_2` (`c_id`),
   KEY `index_4` (`user_id`),
   KEY `index_3` (`fecha`)
-) TYPE=InnoDB ROW_FORMAT=DYNAMIC;
+) ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `orden_p`
@@ -510,7 +510,7 @@ CREATE TABLE `pagos` (
   `tipo` int(2) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) TYPE=InnoDB AUTO_INCREMENT=6 ROW_FORMAT=DYNAMIC;
+) AUTO_INCREMENT=6 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `pagos`
@@ -541,7 +541,7 @@ CREATE TABLE `parametros` (
   `direccion` varchar(255) NOT NULL,
   `clausulado` text,
   PRIMARY KEY  (`id`)
-) TYPE=MyISAM AUTO_INCREMENT=2;
+) AUTO_INCREMENT=2;
 
 --
 -- Dumping data for table `parametros`
@@ -564,7 +564,7 @@ CREATE TABLE `prendas` (
   `tipo` int(2) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `nombre` (`nombre`)
-) TYPE=InnoDB ROW_FORMAT=DYNAMIC;
+) ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `prendas`
@@ -588,7 +588,7 @@ CREATE TABLE `servicios` (
   `tipo` int(2) unsigned NOT NULL default '1',
   PRIMARY KEY  (`id`),
   KEY `prendas` (`prenda`)
-) TYPE=InnoDB ROW_FORMAT=DYNAMIC;
+) ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `servicios`
@@ -643,7 +643,7 @@ CREATE TABLE `usuarios` (
   `avatar` varchar(45) NOT NULL default 'sample_user.png',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `index_2` (`username`)
-) TYPE=InnoDB AUTO_INCREMENT=2 ROW_FORMAT=DYNAMIC;
+) AUTO_INCREMENT=2 ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `usuarios`
@@ -654,7 +654,15 @@ INSERT INTO `usuarios` (`id`,`username`,`password`,`nivel`,`tipo`,`nombre`,`pues
  (1,'admin','admin',1,1,'SUPERVISOR DE TIENDA','SUPERVISOR',NULL,'sample_user.png');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 
-
+DROP TABLE IF EXISTS `cs_precios`;
+CREATE TABLE  `cs_precios` (
+  `idprenda` int(10) unsigned NOT NULL,
+  `prenda` varchar(60) NOT NULL,
+  `servicio` varchar(255) NOT NULL,
+  `precio` decimal(12,2) DEFAULT '0.00',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+);
 
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
