@@ -19,7 +19,9 @@ class Catalogo extends CI_Controller {
 //*************************************************************************************************************************
 	public function importar()
 	{
-		mkdir("./uploads");
+		if(!file_exists("./uploads")) {
+			mkdir("./uploads");
+		}
 		$data = array();
 	       $data['menu'] = 'inicio';
 	       $data['submenu'] = 'completo';
