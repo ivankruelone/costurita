@@ -19,15 +19,16 @@ class Catalogo extends CI_Controller {
 //*************************************************************************************************************************
 	public function importar()
 	{
-	   $data = array();
-       $data['menu'] = 'inicio';
-       $data['submenu'] = 'completo';
-       //$data['sidebar'] = "head/sidebar";
-       //$data['widgets'] = "main/widgets";
-       $data['dondeestoy'] = "main/dondeestoy";
-       
-       $data['titulo'] = "SASTRERIA";
-       $data['contenido'] = "catalogo/importar";
+		mkdir("./uploads");
+		$data = array();
+	       $data['menu'] = 'inicio';
+	       $data['submenu'] = 'completo';
+	       //$data['sidebar'] = "head/sidebar";
+	       //$data['widgets'] = "main/widgets";
+	       $data['dondeestoy'] = "main/dondeestoy";
+	       
+	       $data['titulo'] = "SASTRERIA";
+	       $data['contenido'] = "catalogo/importar";
        
 		$this->load->view('header');
 		$this->load->view('main', $data);
