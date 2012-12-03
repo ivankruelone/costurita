@@ -176,7 +176,7 @@ private function subir_datos($base)
                 'abono'         => $row['Abono'],
                 'pendiente'     => $row['Pendiente'],
                 'no_prendas'    => $row['NoPrendas'],
-                'observacion'   => $row['Observaciones'],
+                'observacion'   => utf8_encode($row['Observaciones']),
                 'id_status'     => $row['IdStatus'],
                 'id_user'       => $row['IdUsuario'],
                 'fecha_captura' => $row['FechaActualiza']

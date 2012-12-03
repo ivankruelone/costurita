@@ -11,15 +11,18 @@
 	$numalet->setMoneda('PESOS');
 	$numalet->setPrefijo("");
 	$numalet->setSufijo('M. N.');
+    
+    $dia1 = new DateTime($row->fecha_alta);
+    $dia2 = new DateTime($row->fecha_entrega);
 	
 	$dia = array(
-			'1' => 'DOMINGO',
-			'2' => 'LUNES',
-			'3' => 'MARTES',
-			'4' => 'MIERCOLES',
-			'5' => 'JUEVES',
-			'6' => 'VIERNES',
-			'7' => 'SABADO'
+			'1' => 'DOM',
+			'2' => 'LUN',
+			'3' => 'MAR',
+			'4' => 'MIE',
+			'5' => 'JUE',
+			'6' => 'VIE',
+			'7' => 'SAB'
 			);
 
 ?>
@@ -63,7 +66,7 @@
             Fecha:
         </td>
         <td>
-            <?php echo $row->fecha_alta; ?>
+            <?php echo $dia[$row->dia_alta]." ".date_format($dia1, 'd/m/Y'); ?>
         </td>
         <td>
             Total de Prendas:
@@ -116,7 +119,7 @@
     <table width="100%" style="font-size: x-small;">
     <tr>
         <td>Fecha de entrega: </td>
-        <td><?php echo $dia[$row->dia]."<br />".$row->fecha_entrega; ?></td>
+        <td><?php echo $dia[$row->dia]." ".date_format($dia2, 'd/m/Y'); ?></td>
         <td>Hora de entrega: </td>
         <td><?php echo $row->hora_entrega; ?></td>
     </tr>
