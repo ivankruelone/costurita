@@ -329,20 +329,44 @@ private function subir_datos($base)
     
 	public function index($campo = 'id', $orden = 'ASC')
 	{
+		$this->load->model('catalogo_model');
+	    $this->load->library('pagination');
+        $config['uri_segment'] = 5;
+        $config['base_url'] = site_url().'/catalogo/index/'.$campo.'/'.$orden.'/';
+        $config['total_rows'] = $this->catalogo_model->get_num_clientes();
+        $config['per_page'] = '50';
+        $config['first_link'] = '<font size="+1">Primero</font>';
+        $config['last_link'] = '<font size="+1">Ultimo</font>';
+        $config['next_link'] = '<font size="+1">Siguiente</font>';
+        $config['prev_link'] = '<font size="+1">Anterior</font>';
+        $config['cur_tag_open'] = '<font size="+1" color="#2340CF"><b> ';
+        $config['cur_tag_close'] = ' </b></font>';
+        $config['num_tag_open'] = '<font size="+1" color="#000000"> ';
+        $config['num_tag_close'] = ' </font>';
+            
+        $this->pagination->initialize($config);
+
 	   $data = array();
        $data['menu'] = 'inicio';
        $data['submenu'] = 'completo';
        //$data['sidebar'] = "head/sidebar";
        //$data['widgets'] = "main/widgets";
        $data['dondeestoy'] = "main/dondeestoy";
-       $this->load->model('catalogo_model');
+       
        
        $data['titulo'] = "SASTRERIA";
        $data['contenido'] = "catalogo/limpio";
-        $data['tabla'] = $this->catalogo_model->clientes($campo, $orden);
+        $data['tabla'] = $this->catalogo_model->clientes($campo, $orden, $config['per_page'], $this->uri->segment(5));
        
 		$this->load->view('header');
 		$this->load->view('main', $data);
+	}
+	
+	function busca_clientes()
+	{
+		$busca = $this->input->post('busca');
+		$this->load->model('catalogo_model');
+		echo $this->catalogo_model->busqueda_clientes($busca);
 	}
  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////<br />   
  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////<br />

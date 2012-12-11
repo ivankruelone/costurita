@@ -437,7 +437,7 @@
             <td align=\"left\">".$row->nombre."</td>
             <td align=\"left\">".$row->fecha_alta."</td>
             <td align=\"left\">".$row->fecha_entrega."</td>
-            <td align=\"left\"><span class=\"tag $color\">".$row->estatusx."</div></td>
+            <td align=\"left\"><span class=\"tag $color\" style=\"font-size: 8px;\">".$row->estatusx."</div></td>
             <td align=\"right\">".number_format($row->total, 2)."</td>
             <td align=\"right\">".number_format($row->abono, 2)."</td>
             <td align=\"right\">".number_format($row->pendiente, 2)."</td>

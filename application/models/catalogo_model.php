@@ -1,9 +1,21 @@
 <?php
 	class Catalogo_model extends CI_Model {
 //*************************************************************************************************************************
-    function clientes($campo, $orden)
+
+    function get_num_clientes()
+    {
+        $this->db->select('count(*) as cuenta', false);
+        $query = $this->db->get('clientes');
+        $row = $query->row();
+        
+        return $row->cuenta;
+        
+    }
+	
+    function clientes($campo, $orden, $limit, $offset = 0)
     {
         $this->db->order_by($campo, $orden);
+		$this->db->limit($limit, $offset);
         $query = $this->db->get('clientes');
         
         
@@ -15,9 +27,18 @@
         
         $dir_asc = anchor('catalogo/index/dire/ASC', 'A');
         $dir_desc = anchor('catalogo/index/dire/DESC', 'D');
-
-        $tabla= anchor('catalogo/tabla_clientes', 'Agrega un nuevo cliente.')."
+		$data = array(
+              'name'        => 'busca',
+              'id'          => 'busca',
+              'maxlength'   => '100',
+              'size'        => '50'
+            );
+        $tabla= anchor('catalogo/tabla_clientes', 'Agrega un nuevo cliente.')."<br /><br />".
+		"Busca un Cliente: ".
+		form_input($data).
+		"
 		<br />
+		<div id=\"resultado_busqueda\">
         <table id=\"hor-minimalist-b\">
         <thead>
         
@@ -57,9 +78,64 @@
         $tabla.="
         </tbody>
         </table>";
+		
+		$tabla.=  '<div align="center">'.$this->pagination->create_links().'</div></div>';
         
         return $tabla;
     }
+
+
+    function busqueda_clientes($busca)
+    {
+		$this->db->like('nombre', $busca);
+        $this->db->order_by('nombre');
+        $query = $this->db->get('clientes');
+        
+        $tabla= "
+        <table id=\"hor-minimalist-b\">
+        <thead>
+        
+        <tr>
+        <th align=\"left\" width=\"50px\">Id</th>
+        <th align=\"left\">Nombre</th>
+        <th align=\"left\">Direccion</th>
+        <th align=\"left\">Casa</th>
+        <th align=\"left\">Trabajo</th>
+        <th align=\"left\">Celular</th>
+        <th align=\"left\">Modificar</th>
+        
+        </tr>
+        </thead>
+        <tbody>
+        ";
+        
+        foreach($query->result() as $row)
+        {
+        if($row->tipo==1){$color='#000000';}else{$color='#FC0505';}   
+            $l1 = anchor('catalogo/cambia_cliente/'.$row->id, '<img src="'.base_url().'img/edit.png" border="0" width="20px" /></a>', array('title' => 'Haz Click aqui para cambiar datos del cliente!', 'class' => 'encabezado'));
+
+		   //id, nombre, dire, descu, rfc, correo, telcasa, teltra, telcel, tipo
+            $tabla.="
+            <tr>
+            <td align=\"left\"><font color=\"$color\">".$row->id."</font></td>
+            <td align=\"left\"><font color=\"$color\">".$row->nombre."</font></td>
+            <td align=\"left\"><font color=\"$color\">".$row->dire."</font></td>
+            <td align=\"left\"><font color=\"$color\">".$row->telcasa."</font></td>
+            <td align=\"left\"><font color=\"$color\">".$row->teltra."</font></td>
+            <td align=\"left\"><font color=\"$color\">".$row->telcel."</font></td>
+            <td align=\"right\"><font color=\"$color\">".$l1."</font></td>
+            </tr>
+            ";
+        }
+        
+        $tabla.="
+        </tbody>
+        </table>";
+		
+        
+        return $tabla;
+    }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function create_member_cliente($nom,$dir,$col,$pob,$cp,$correo,$rfc,$tcas,$ttra,$tcel,$num,$int)
