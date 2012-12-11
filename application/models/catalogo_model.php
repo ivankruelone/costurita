@@ -1,42 +1,39 @@
 <?php
-	class Catalogo_model extends CI_Model {
-//*************************************************************************************************************************
+class Catalogo_model extends CI_Model
+{
 
     function get_num_clientes()
     {
         $this->db->select('count(*) as cuenta', false);
         $query = $this->db->get('clientes');
         $row = $query->row();
-        
+
         return $row->cuenta;
-        
+
     }
-	
+
     function clientes($campo, $orden, $limit, $offset = 0)
     {
         $this->db->order_by($campo, $orden);
-		$this->db->limit($limit, $offset);
+        $this->db->limit($limit, $offset);
         $query = $this->db->get('clientes');
-        
-        
+
+
         $id_asc = anchor('catalogo/index/id/ASC', 'A');
         $id_desc = anchor('catalogo/index/id/DESC', 'D');
 
         $nom_asc = anchor('catalogo/index/nombre/ASC', 'A');
         $nom_desc = anchor('catalogo/index/nombre/DESC', 'D');
-        
+
         $dir_asc = anchor('catalogo/index/dire/ASC', 'A');
         $dir_desc = anchor('catalogo/index/dire/DESC', 'D');
-		$data = array(
-              'name'        => 'busca',
-              'id'          => 'busca',
-              'maxlength'   => '100',
-              'size'        => '50'
-            );
-        $tabla= anchor('catalogo/tabla_clientes', 'Agrega un nuevo cliente.')."<br /><br />".
-		"Busca un Cliente: ".
-		form_input($data).
-		"
+        $data = array(
+            'name' => 'busca',
+            'id' => 'busca',
+            'maxlength' => '100',
+            'size' => '50');
+        $tabla = anchor('catalogo/tabla_clientes', 'Agrega un nuevo cliente.') .
+            "<br /><br />" . "Busca un Cliente: " . form_input($data) . "
 		<br />
 		<div id=\"resultado_busqueda\">
         <table id=\"hor-minimalist-b\">
@@ -55,43 +52,54 @@
         </thead>
         <tbody>
         ";
-        
-        foreach($query->result() as $row)
-        {
-        if($row->tipo==1){$color='#000000';}else{$color='#FC0505';}   
-            $l1 = anchor('catalogo/cambia_cliente/'.$row->id, '<img src="'.base_url().'img/edit.png" border="0" width="20px" /></a>', array('title' => 'Haz Click aqui para cambiar datos del cliente!', 'class' => 'encabezado'));
 
-		   //id, nombre, dire, descu, rfc, correo, telcasa, teltra, telcel, tipo
-            $tabla.="
+        foreach ($query->result() as $row) {
+            if ($row->tipo == 1) {
+                $color = '#000000';
+            } else {
+                $color = '#FC0505';
+            }
+            $l1 = anchor('catalogo/cambia_cliente/' . $row->id, '<img src="' . base_url() .
+                'img/edit.png" border="0" width="20px" /></a>', array('title' =>
+                    'Haz Click aqui para cambiar datos del cliente!', 'class' => 'encabezado'));
+
+            //id, nombre, dire, descu, rfc, correo, telcasa, teltra, telcel, tipo
+            $tabla .= "
             <tr>
-            <td align=\"left\"><font color=\"$color\">".$row->id."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->nombre."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->dire."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->telcasa."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->teltra."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->telcel."</font></td>
-            <td align=\"right\"><font color=\"$color\">".$l1."</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->id .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->nombre .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->dire .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->telcasa .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->teltra .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->telcel .
+                "</font></td>
+            <td align=\"right\"><font color=\"$color\">" . $l1 . "</font></td>
             </tr>
             ";
         }
-        
-        $tabla.="
+
+        $tabla .= "
         </tbody>
         </table>";
-		
-		$tabla.=  '<div align="center">'.$this->pagination->create_links().'</div></div>';
-        
+
+        $tabla .= '<div align="center">' . $this->pagination->create_links() .
+            '</div></div>';
+
         return $tabla;
     }
 
-
     function busqueda_clientes($busca)
     {
-		$this->db->like('nombre', $busca);
+        $this->db->like('nombre', $busca);
         $this->db->order_by('nombre');
         $query = $this->db->get('clientes');
-        
-        $tabla= "
+
+        $tabla = "
         <table id=\"hor-minimalist-b\">
         <thead>
         
@@ -108,95 +116,102 @@
         </thead>
         <tbody>
         ";
-        
-        foreach($query->result() as $row)
-        {
-        if($row->tipo==1){$color='#000000';}else{$color='#FC0505';}   
-            $l1 = anchor('catalogo/cambia_cliente/'.$row->id, '<img src="'.base_url().'img/edit.png" border="0" width="20px" /></a>', array('title' => 'Haz Click aqui para cambiar datos del cliente!', 'class' => 'encabezado'));
 
-		   //id, nombre, dire, descu, rfc, correo, telcasa, teltra, telcel, tipo
-            $tabla.="
+        foreach ($query->result() as $row) {
+            if ($row->tipo == 1) {
+                $color = '#000000';
+            } else {
+                $color = '#FC0505';
+            }
+            $l1 = anchor('catalogo/cambia_cliente/' . $row->id, '<img src="' . base_url() .
+                'img/edit.png" border="0" width="20px" /></a>', array('title' =>
+                    'Haz Click aqui para cambiar datos del cliente!', 'class' => 'encabezado'));
+
+            //id, nombre, dire, descu, rfc, correo, telcasa, teltra, telcel, tipo
+            $tabla .= "
             <tr>
-            <td align=\"left\"><font color=\"$color\">".$row->id."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->nombre."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->dire."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->telcasa."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->teltra."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->telcel."</font></td>
-            <td align=\"right\"><font color=\"$color\">".$l1."</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->id .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->nombre .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->dire .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->telcasa .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->teltra .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->telcel .
+                "</font></td>
+            <td align=\"right\"><font color=\"$color\">" . $l1 . "</font></td>
             </tr>
             ";
         }
-        
-        $tabla.="
+
+        $tabla .= "
         </tbody>
         </table>";
-		
-        
+
+
         return $tabla;
     }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function create_member_cliente($nom,$dir,$col,$pob,$cp,$correo,$rfc,$tcas,$ttra,$tcel,$num,$int)
-	{
+    function create_member_cliente($nom, $dir, $col, $pob, $cp, $correo, $rfc, $tcas,
+        $ttra, $tcel, $num, $int)
+    {
 
         $new_member_insert_data = array(
-			'nombre' =>strtoupper(trim($nom)),
-			'dire'   =>strtoupper(trim($dir)),
-            'col'    =>strtoupper(trim($col)),
-            'pob'    =>strtoupper(trim($pob)),
-            'num'    =>strtoupper(trim($num)),
-            'int'    =>strtoupper(trim($int)),
-            'cp'     =>strtoupper(trim($cp)),
-			'descu'  => 0,
-            'rfc'    =>  '',		
-			'correo' =>  '',
-            'telcasa'=> $tcas,
+            'nombre' => strtoupper(trim($nom)),
+            'dire' => strtoupper(trim($dir)),
+            'col' => strtoupper(trim($col)),
+            'pob' => strtoupper(trim($pob)),
+            'num' => strtoupper(trim($num)),
+            'int' => strtoupper(trim($int)),
+            'cp' => strtoupper(trim($cp)),
+            'descu' => 0,
+            'rfc' => '',
+            'correo' => '',
+            'telcasa' => $tcas,
             'teltra' => $ttra,
-			'telcel' => $tcel,
-            'tipo'   => 1           						
-		);
-		
-		$insert = $this->db->insert('clientes', $new_member_insert_data);
+            'telcel' => $tcel,
+            'tipo' => 1);
+
+        $insert = $this->db->insert('clientes', $new_member_insert_data);
         return $this->db->insert_id();
-		
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function trae_datos_cliente($id){
-    $sql = "SELECT *  FROM clientes  where id= ? ";
-    $query = $this->db->query($sql,array($id));
-     return $query;
+
     }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    function trae_datos_cliente($id)
+    {
+        $sql = "SELECT *  FROM clientes  where id= ? ";
+        $query = $this->db->query($sql, array($id));
+        return $query;
+    }
 
-   function busca_cliente()
-	{
-		$sql = "SELECT id,nombre FROM  clientes where tipo=1";
+    function busca_cliente()
+    {
+        $sql = "SELECT id,nombre FROM  clientes where tipo=1";
         $query = $this->db->query($sql);
         $cli = array();
         $cli[0] = "Selecciona un Cliente";
-        foreach($query->result() as $row){
+        foreach ($query->result() as $row) {
             $cli[$row->id] = $row->nombre;
         }
         return $cli;
-	} 
+    }
 
-   function busca_hora()
-	{
-		$sql = "SELECT * FROM  horario;";
+    function busca_hora()
+    {
+        $sql = "SELECT * FROM  horario;";
         $query = $this->db->query($sql);
         $cli = array();
-        foreach($query->result() as $row){
+        foreach ($query->result() as $row) {
             $cli[$row->horario] = $row->horario;
         }
         return $cli;
-	}
- 
-    function autocomplete(){
+    }
+
+    function autocomplete()
+    {
         $this->db->select('id, nombre, tipo');
         $this->db->like('nombre', $this->input->get_post('term'));
         $this->db->having('tipo', 1);
@@ -205,7 +220,8 @@ function trae_datos_cliente($id){
         return $query->result();
     }
 
-    function autocomplete_orden(){
+    function autocomplete_orden()
+    {
         $this->db->select('id');
         $this->db->like('id', $this->input->get_post('term'));
         $this->db->limit(15);
@@ -213,45 +229,38 @@ function trae_datos_cliente($id){
         return $query->result();
     }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function update_member_cliente($id,$nom,$dir,$col,$pob,$cp,$correo,$rfc,$tcas,$ttra,$tcel,$num,$int,$tipo)
-	{
-  
-        $data = array(
-			'nombre' =>strtoupper(trim($nom)),
-			'dire'   =>strtoupper(trim($dir)),
-            'col'    =>strtoupper(trim($col)),
-            'pob'    =>strtoupper(trim($pob)),
-            'num'    =>strtoupper(trim($num)),
-            'int'    =>strtoupper(trim($int)),
-            'cp'     =>strtoupper(trim($cp)),
-			'descu'  => 0,
-            'rfc'    => '',		
-			'correo' => '',
-            'telcasa'=> $tcas,
-            'teltra' => $ttra,
-			'telcel' => $tcel,
-            'tipo'   => $tipo           						
-		);
-		
-		$this->db->where('id', $id);
-        $this->db->update('clientes', $data);
-		
-}
+    function update_member_cliente($id, $nom, $dir, $col, $pob, $cp, $correo, $rfc,
+        $tcas, $ttra, $tcel, $num, $int, $tipo)
+    {
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//*************************************************************************************************************************
-  function prendas()
+        $data = array(
+            'nombre' => strtoupper(trim($nom)),
+            'dire' => strtoupper(trim($dir)),
+            'col' => strtoupper(trim($col)),
+            'pob' => strtoupper(trim($pob)),
+            'num' => strtoupper(trim($num)),
+            'int' => strtoupper(trim($int)),
+            'cp' => strtoupper(trim($cp)),
+            'descu' => 0,
+            'rfc' => '',
+            'correo' => '',
+            'telcasa' => $tcas,
+            'teltra' => $ttra,
+            'telcel' => $tcel,
+            'tipo' => $tipo);
+
+        $this->db->where('id', $id);
+        $this->db->update('clientes', $data);
+
+    }
+
+    function prendas()
     {
         $sql = "SELECT * FROM prendas order by nombre;";
         $query = $this->db->query($sql);
-        
-        
-        
-        
-        $tabla= "
+
+
+        $tabla = "
         <table id=\"hor-minimalist-b\">
         <thead>
         
@@ -267,25 +276,32 @@ function update_member_cliente($id,$nom,$dir,$col,$pob,$cp,$correo,$rfc,$tcas,$t
         </thead>
         <tbody>
         ";
-        
-        foreach($query->result() as $row)
-        {
-        if($row->tipo==1){$color='#000000';}else{$color='#FC0505';}    
-            $l1 = anchor('catalogo/cambia_prendas/'.$row->id, '<img src="'.base_url().'img/edit.png" border="0" width="20px" /></a>', array('title' => 'Haz Click aqui para cambiar datos del cliente!', 'class' => 'encabezado'));
+
+        foreach ($query->result() as $row) {
+            if ($row->tipo == 1) {
+                $color = '#000000';
+            } else {
+                $color = '#FC0505';
+            }
+            $l1 = anchor('catalogo/cambia_prendas/' . $row->id, '<img src="' . base_url() .
+                'img/edit.png" border="0" width="20px" /></a>', array('title' =>
+                    'Haz Click aqui para cambiar datos del cliente!', 'class' => 'encabezado'));
             //id, nombre, dire, descu, rfc, correo, telcasa, teltra, telcel, tipo
-            $tabla.="
+            $tabla .= "
             <tr>
-            <td align=\"center\"><font color=\"$color\">".$row->id."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->nombre."</font></td>
-            <td align=\"right\"><font color=\"$color\">".$l1."</font></td>
+            <td align=\"center\"><font color=\"$color\">" . $row->id .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->nombre .
+                "</font></td>
+            <td align=\"right\"><font color=\"$color\">" . $l1 . "</font></td>
             </tr>
             ";
         }
-        
-        $tabla.="
+
+        $tabla .= "
         </tbody>
         </table>";
-        
+
         return $tabla;
     }
 
@@ -296,76 +312,63 @@ function update_member_cliente($id,$nom,$dir,$col,$pob,$cp,$correo,$rfc,$tcas,$t
         $this->db->having('tipo', 1);
         $this->db->order_by('nombre');
         $query = $this->db->get('servicios');
-        
-        $a = null;
-        
-        foreach($query->result() as $row)
-        {
-            $a.= '<option value="'.$row->id.'">'.$row->nombre.' ( $ '.$row->precio.' MX )</option>';
-        }
-        
-        return $a;
-        
-    }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function create_member_prenda($nom)
-	{
 
-        $new_member_insert_data = array(
-			'nombre' =>strtoupper(trim($nom)),
-            'tipo'   =>0           						
-		);
-		
-		$insert = $this->db->insert('prendas', $new_member_insert_data);
-		
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function trae_datos_prendas($id){
-    $sql = "SELECT *  FROM prendas  where id= ? ";
-    $query = $this->db->query($sql,array($id));
-     return $query;
+        $a = null;
+
+        foreach ($query->result() as $row) {
+            $a .= '<option value="' . $row->id . '">' . $row->nombre . ' ( $ ' . $row->
+                precio . ' MX )</option>';
+        }
+
+        return $a;
+
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-   function busca_prenda()
-	{
-		$sql = "SELECT id,nombre FROM  prendas where tipo=1 order by nombre;";
+
+    function create_member_prenda($nom)
+    {
+
+        $new_member_insert_data = array('nombre' => strtoupper(trim($nom)), 'tipo' => 0);
+
+        $insert = $this->db->insert('prendas', $new_member_insert_data);
+
+    }
+
+    function trae_datos_prendas($id)
+    {
+        $sql = "SELECT *  FROM prendas  where id= ? ";
+        $query = $this->db->query($sql, array($id));
+        return $query;
+    }
+
+    function busca_prenda()
+    {
+        $sql = "SELECT id,nombre FROM  prendas where tipo=1 order by nombre;";
         $query = $this->db->query($sql);
         $pre = array();
         $pre[0] = "Selecciona una Prenda";
-        foreach($query->result() as $row){
+        foreach ($query->result() as $row) {
             $pre[$row->id] = $row->nombre;
         }
         return $pre;
-	} 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function update_member_prendas($id,$nom,$tipo)
-	{
-  
-        $data = array(
-			'nombre' =>strtoupper(trim($nom)),
-            'tipo'   => $tipo           						
-		);
-		
-		$this->db->where('id', $id);
+    }
+
+    function update_member_prendas($id, $nom, $tipo)
+    {
+
+        $data = array('nombre' => strtoupper(trim($nom)), 'tipo' => $tipo);
+
+        $this->db->where('id', $id);
         $this->db->update('prendas', $data);
-		
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//*************************************************************************************************************************
-  function pagos()
+
+    }
+
+    function pagos()
     {
         $sql = "SELECT * FROM pagos";
         $query = $this->db->query($sql);
-        
-        
-        
-        
-        $tabla= "
+
+
+        $tabla = "
         <table id=\"hor-minimalist-b\">
         <thead>
         
@@ -381,73 +384,68 @@ function update_member_prendas($id,$nom,$tipo)
         </thead>
         <tbody>
         ";
-        
-        foreach($query->result() as $row)
-        {
-        if($row->tipo==1){$color='#000000';}else{$color='#FC0505';}    
-            $l1 = anchor('catalogo/cambia_pagos/'.$row->id, '<img src="'.base_url().'img/edit.png" border="0" width="20px" /></a>', array('title' => 'Haz Click aqui para cambiar datos del cliente!', 'class' => 'encabezado'));
+
+        foreach ($query->result() as $row) {
+            if ($row->tipo == 1) {
+                $color = '#000000';
+            } else {
+                $color = '#FC0505';
+            }
+            $l1 = anchor('catalogo/cambia_pagos/' . $row->id, '<img src="' . base_url() .
+                'img/edit.png" border="0" width="20px" /></a>', array('title' =>
+                    'Haz Click aqui para cambiar datos del cliente!', 'class' => 'encabezado'));
             //id, nombre, dire, descu, rfc, correo, telcasa, teltra, telcel, tipo
-            $tabla.="
+            $tabla .= "
             <tr>
-            <td align=\"center\"><font color=\"$color\">".$row->id."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->nombre."</font></td>
-            <td align=\"right\"><font color=\"$color\">".$l1."</font></td>
+            <td align=\"center\"><font color=\"$color\">" . $row->id .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->nombre .
+                "</font></td>
+            <td align=\"right\"><font color=\"$color\">" . $l1 . "</font></td>
             </tr>
             ";
         }
-        
-        $tabla.="
+
+        $tabla .= "
         </tbody>
         </table>";
-        
+
         return $tabla;
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function create_member_pagos($nom)
-	{
 
-        $new_member_insert_data = array(
-			'nombre' =>strtoupper(trim($nom)),
-            'tipo'   =>0           						
-		);
-		
-		$insert = $this->db->insert('pagos', $new_member_insert_data);
-		
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function trae_datos_pagos($id){
-    $sql = "SELECT *  FROM pagos  where id= ? ";
-    $query = $this->db->query($sql,array($id));
-     return $query;
+    function create_member_pagos($nom)
+    {
+
+        $new_member_insert_data = array('nombre' => strtoupper(trim($nom)), 'tipo' => 0);
+
+        $insert = $this->db->insert('pagos', $new_member_insert_data);
+
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function update_member_pagos($id,$nom,$tipo)
-	{
-  
-        $data = array(
-			'nombre' =>strtoupper(trim($nom)),
-            'tipo'   => $tipo           						
-		);
-		
-		$this->db->where('id', $id);
+
+    function trae_datos_pagos($id)
+    {
+        $sql = "SELECT *  FROM pagos  where id= ? ";
+        $query = $this->db->query($sql, array($id));
+        return $query;
+    }
+
+    function update_member_pagos($id, $nom, $tipo)
+    {
+
+        $data = array('nombre' => strtoupper(trim($nom)), 'tipo' => $tipo);
+
+        $this->db->where('id', $id);
         $this->db->update('pagos', $data);
-		
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//*************************************************************************************************************************
-  function horarios()
+
+    }
+
+    function horarios()
     {
         $sql = "SELECT * FROM horario";
         $query = $this->db->query($sql);
-        
-        
-        
-        
-        $tabla= "
+
+
+        $tabla = "
         <table id=\"hor-minimalist-b\">
         <thead>
         
@@ -460,36 +458,37 @@ function update_member_pagos($id,$nom,$tipo)
         </thead>
         <tbody>
         ";
-        
-        foreach($query->result() as $row)
-        {
-        if($row->tipo==0){$color='#000000';}else{$color='#FC0505';}    
-            $tabla.="
+
+        foreach ($query->result() as $row) {
+            if ($row->tipo == 0) {
+                $color = '#000000';
+            } else {
+                $color = '#FC0505';
+            }
+            $tabla .= "
             <tr>
-            <td align=\"center\"><font color=\"$color\">".$row->id."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->horario."</font></td>
+            <td align=\"center\"><font color=\"$color\">" . $row->id .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->horario .
+                "</font></td>
             </tr>
             ";
         }
-        
-        $tabla.="
+
+        $tabla .= "
         </tbody>
         </table>";
-        
+
         return $tabla;
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//*************************************************************************************************************************
-  function estatus()
+
+    function estatus()
     {
         $sql = "SELECT * FROM estatus";
         $query = $this->db->query($sql);
-        
-        
-        
-        
-        $tabla= "
+
+
+        $tabla = "
         <table id=\"hor-minimalist-b\">
         <thead>
         
@@ -502,36 +501,37 @@ function update_member_pagos($id,$nom,$tipo)
         </thead>
         <tbody>
         ";
-        
-        foreach($query->result() as $row)
-        {
-        if($row->tipo==0){$color='#000000';}else{$color='#FC0505';}    
-            $tabla.="
+
+        foreach ($query->result() as $row) {
+            if ($row->tipo == 0) {
+                $color = '#000000';
+            } else {
+                $color = '#FC0505';
+            }
+            $tabla .= "
             <tr>
-            <td align=\"center\"><font color=\"$color\">".$row->id."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->nombre."</font></td>
+            <td align=\"center\"><font color=\"$color\">" . $row->id .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->nombre .
+                "</font></td>
             </tr>
             ";
         }
-        
-        $tabla.="
+
+        $tabla .= "
         </tbody>
         </table>";
-        
+
         return $tabla;
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//*************************************************************************************************************************
-  function servicios()
+
+    function servicios()
     {
         $sql = "SELECT a.*,b.nombre as prendax FROM servicios a left join prendas b on b.id=a.prenda";
         $query = $this->db->query($sql);
-        
-        
-        
-        
-        $tabla= "
+
+
+        $tabla = "
         <table id=\"hor-minimalist-b\">
         <thead>
         
@@ -549,88 +549,89 @@ function update_member_pagos($id,$nom,$tipo)
         </thead>
         <tbody>
         ";
-        
-        foreach($query->result() as $row)
-        {
-        if($row->tipo==1){$color='#000000';}else{$color='#FC0505';}    
-            $nivel= $this->session->userdata('nivel');	
-            if($nivel == 1){
-                $l1 = anchor('catalogo/cambia_servicios/'.$row->id, '<img src="'.base_url().'img/edit.png" border="0" width="20px" /></a>', array('title' => 'Haz Click aqui para cambiar precio!', 'class' => 'encabezado'));
-            }else{
+
+        foreach ($query->result() as $row) {
+            if ($row->tipo == 1) {
+                $color = '#000000';
+            } else {
+                $color = '#FC0505';
+            }
+            $nivel = $this->session->userdata('nivel');
+            if ($nivel == 1) {
+                $l1 = anchor('catalogo/cambia_servicios/' . $row->id, '<img src="' . base_url() .
+                    'img/edit.png" border="0" width="20px" /></a>', array('title' =>
+                        'Haz Click aqui para cambiar precio!', 'class' => 'encabezado'));
+            } else {
                 $l1 = null;
             }
             //id, nombre, dire, descu, rfc, correo, telcasa, teltra, telcel, tipo
-            $tabla.="
+            $tabla .= "
             <tr>
-            <td align=\"center\"><font color=\"$color\">".$row->id."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->prendax."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->nombre."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->precio."</font></td>
-            <td align=\"right\"><font color=\"$color\">".$l1."</font></td>
+            <td align=\"center\"><font color=\"$color\">" . $row->id .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->prendax .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->nombre .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->precio .
+                "</font></td>
+            <td align=\"right\"><font color=\"$color\">" . $l1 . "</font></td>
             </tr>
             ";
         }
-        
-        $tabla.="
+
+        $tabla .= "
         </tbody>
         </table>";
-        
+
         return $tabla;
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function create_member_servicios($nom,$pre,$precio)
-	{
+
+    function create_member_servicios($nom, $pre, $precio)
+    {
 
         $new_member_insert_data = array(
-			'nombre' => strtoupper(trim($nom)),
+            'nombre' => strtoupper(trim($nom)),
             'prenda' => $pre,
             'precio' => $precio,
-            'fecha'  => date('Y-m-d H:m'),
-            'tipo'   => 1           						
-		);
-		
-		$this->db->insert('servicios', $new_member_insert_data);
-        
+            'fecha' => date('Y-m-d H:m'),
+            'tipo' => 1);
+
+        $this->db->insert('servicios', $new_member_insert_data);
+
         return $this->db->insert_id();
-		
-}
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function trae_datos_servicios($id){
-    $sql = "SELECT a.*,b.nombre as prendax  FROM servicios a left join prendas b on b.id=a.prenda where a.id= ? ";
-    $query = $this->db->query($sql,array($id));
-     return $query;
+
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function update_member_servicios($id,$nom,$pre,$precio,$tipo)
-	{
-  
+
+    function trae_datos_servicios($id)
+    {
+        $sql = "SELECT a.*,b.nombre as prendax  FROM servicios a left join prendas b on b.id=a.prenda where a.id= ? ";
+        $query = $this->db->query($sql, array($id));
+        return $query;
+    }
+
+    function update_member_servicios($id, $nom, $pre, $precio, $tipo)
+    {
+
         $data = array(
-			'nombre' =>strtoupper(trim($nom)),
-            'prenda' =>$pre,
-            'precio' =>$precio,
-            'fecha'  =>date('Y-m-d H:m'),
-            'tipo'   =>$tipo           						
-		);
-		
-		$this->db->where('id', $id);
-        $this->db->update('servicios', $data);
-		
-}
+            'nombre' => strtoupper(trim($nom)),
+            'prenda' => $pre,
+            'precio' => $precio,
+            'fecha' => date('Y-m-d H:m'),
+            'tipo' => $tipo);
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function trae_datos_parametro(){
-    $sql = "SELECT date_add(date(now()), interval dias day)as fecha  FROM parametros where id=1";
-    $query = $this->db->query($sql);
-    $row= $query->row();
-     return $row->fecha;
+        $this->db->where('id', $id);
+        $this->db->update('servicios', $data);
+
     }
 
+    function trae_datos_parametro()
+    {
+        $sql = "SELECT date_add(date(now()), interval dias day)as fecha  FROM parametros where id=1";
+        $query = $this->db->query($sql);
+        $row = $query->row();
+        return $row->fecha;
+    }
 
     function usuario($id)
     {
@@ -642,11 +643,9 @@ function trae_datos_parametro(){
     {
         $this->db->where('nivel', 2);
         $query = $this->db->get('usuarios');
-        
-        
-        
-        
-        $tabla= "
+
+
+        $tabla = "
         <table id=\"hor-minimalist-b\">
         <thead>
         
@@ -663,59 +662,41 @@ function trae_datos_parametro(){
         </thead>
         <tbody>
         ";
-        
-        foreach($query->result() as $row)
-        {
+
+        foreach ($query->result() as $row) {
             $a = array('0' => 'Inactivo', '1' => 'Activo');
-        if($row->tipo==1){$color='#000000';}else{$color='#FC0505';}    
-            $l1 = anchor('catalogo/cambia_usuario/'.$row->id, '<img src="'.base_url().'img/edit.png" border="0" width="20px" /></a>', array('title' => 'Haz Click aqui para cambiar datos del cliente!', 'class' => 'encabezado'));
+            if ($row->tipo == 1) {
+                $color = '#000000';
+            } else {
+                $color = '#FC0505';
+            }
+            $l1 = anchor('catalogo/cambia_usuario/' . $row->id, '<img src="' . base_url() .
+                'img/edit.png" border="0" width="20px" /></a>', array('title' =>
+                    'Haz Click aqui para cambiar datos del cliente!', 'class' => 'encabezado'));
             //id, nombre, dire, descu, rfc, correo, telcasa, teltra, telcel, tipo
-            $tabla.="
+            $tabla .= "
             <tr>
-            <td align=\"left\"><font color=\"$color\">".$row->id."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->username."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->nombre."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->puesto."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$row->email."</font></td>
-            <td align=\"left\"><font color=\"$color\">".$a[$row->tipo]."</font></td>
-            <td align=\"center\"><font color=\"$color\">".$l1."</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->id .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->username .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->nombre .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->puesto .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $row->email .
+                "</font></td>
+            <td align=\"left\"><font color=\"$color\">" . $a[$row->tipo] .
+                "</font></td>
+            <td align=\"center\"><font color=\"$color\">" . $l1 . "</font></td>
             </tr>
             ";
         }
-        
-        $tabla.="
+
+        $tabla .= "
         </tbody>
         </table>";
-        
+
         return $tabla;
     }
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 }
